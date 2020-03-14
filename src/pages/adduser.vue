@@ -149,7 +149,6 @@ export default {
               confirm: this.confirm
             }
           );
-          console.log(response.data.status);
           if (response.data.status == "ok") {
             app.dialog.alert("Successfully Created User", "Success!");
             router.navigate("/manageuser/");

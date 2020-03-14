@@ -59,10 +59,9 @@ export default {
             params: { email: this.username, password: this.password }
           }
         );
-        console.log(response.data.status);
         if (response.data.status == "ok") {
           sessionStorage.setItem("loginpage", response.data.token);
-          router.navigate("/manageuser/");
+          router.navigate("/managelisting/");
         }
         if (response.data.status == "error") {
           app.dialog.alert(response.data.message);
@@ -78,7 +77,7 @@ export default {
     const self = this;
     const app = self.$f7;
     const router = self.$f7router;
-    if (sessionStorage.getItem("loginpage")) router.navigate("/manageuser/");
+    if (sessionStorage.getItem("loginpage")) router.navigate("/managelisting/");
   }
 };
 </script>

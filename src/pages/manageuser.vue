@@ -130,11 +130,8 @@ export default {
     },
     getOneUserDetails(item) {
       this.individualUser = item;
-      console.log(this.individualUser);
     },
     editUser() {
-      console.log(this.individualUser.status);
-      console.log(this.individualUser.type);
       const self = this;
       const app = self.$f7;
       const router = self.$f7router;
@@ -161,15 +158,14 @@ export default {
     },
     deleteUser(item) {
       this.individualUser = item;
-      console.log(this.individualUser.status);
-      console.log(this.individualUser.type);
       const self = this;
       const app = self.$f7;
       const router = self.$f7router;
       app.dialog.confirm("Confirm Delete?", () => {
         axios
           .put(
-            "https://b2b2c.herokuapp.com/api/v1/user/" + this.individualUser._id,
+            "https://b2b2c.herokuapp.com/api/v1/user/" +
+              this.individualUser._id,
             {
               token: this.token,
               status: "inactive",
@@ -188,19 +184,14 @@ export default {
     },
     resetPassword(item) {
       this.individualUser = item;
-      console.log(this.individualUser.status);
-      console.log(this.individualUser.type);
       const self = this;
       const app = self.$f7;
       const router = self.$f7router;
       app.dialog.confirm("Confirm Reset Password?", () => {
         axios
-          .put(
-            "https://b2b2c.herokuapp.com/api/v1/user/forget/",
-            {
+          .put("https://b2b2c.herokuapp.com/api/v1/user/forget/", {
             email: this.individualUser.email
-            }
-          )
+          })
           .then(response => {
             app.dialog.alert("Successfully Reset Password!", async () => {
               const res = await axios.get(
@@ -226,7 +217,7 @@ export default {
         const res = await axios.get(
           `https://b2b2c.herokuapp.com/api/v1/users/search?perPage=5&page=${this.pageNumber}`
         );
-       
+
         for (let i of res.data.users) {
           self.userlist.push(i);
         }
@@ -239,13 +230,10 @@ export default {
       "https://b2b2c.herokuapp.com/api/v1/users/search?perPage=5&page=1"
     );
     this.userlist = res.data.users;
-    console.log("userlist " + res.data.totalCount);
-    if (res.data.totalCount == 0 || res.data.totalCount <= 5)
-        {
-          console.log("inside this");
-          this.showPreloader = false;
-          this.allowInfinite = false;
-        }
+    if (res.data.totalCount == 0 || res.data.totalCount <= 5) {
+      this.showPreloader = false;
+      this.allowInfinite = false;
+    }
     this.pageDetails = res.data.lastPage;
   }
 };

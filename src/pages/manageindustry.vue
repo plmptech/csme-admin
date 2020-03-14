@@ -79,8 +79,6 @@ export default {
       const self = this;
       const app = self.$f7;
       const router = self.$f7router;
-      console.log("TOKEN: " + this.token);
-      console.log("ID IS: " + item._id);
       app.dialog.confirm("Confirm Delete?", () => {
         axios
           .delete("https://b2b2c.herokuapp.com/api/v1/industry/" + item._id, {

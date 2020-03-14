@@ -61,9 +61,7 @@ export default {
       const self = this;
       const app = self.$f7;
       const router = self.$f7router;
-      if (
-        this.name.length == 0
-      ) {
+      if (this.name.length == 0) {
         app.dialog.alert("One of the required fields is empty", "Error");
       } else {
         try {
@@ -74,7 +72,6 @@ export default {
               token: this.token
             }
           );
-          console.log(response.data.status);
           if (response.data.status == "ok") {
             app.dialog.alert("Successfully Created Country", "Success!");
             router.navigate("/manageindustry/");

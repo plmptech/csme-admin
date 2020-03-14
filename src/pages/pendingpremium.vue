@@ -67,15 +67,15 @@ export default {
     },
     approveUser(item) {
       this.individualUser = item;
-      console.log(this.individualUser.status);
-      console.log(this.individualUser.type);
       const self = this;
       const app = self.$f7;
       const router = self.$f7router;
       app.dialog.confirm("Confirm Approve?", () => {
         axios
           .put(
-            "https://b2b2c.herokuapp.com/api/v1/user/" + this.individualUser._id + "/approve",
+            "https://b2b2c.herokuapp.com/api/v1/user/" +
+              this.individualUser._id +
+              "/approve",
             {
               token: this.token,
               approve: "yes"
@@ -96,14 +96,17 @@ export default {
       const self = this;
       const app = self.$f7;
       const router = self.$f7router;
-
-      console.log(this.individualUser);
       app.dialog.confirm("Confirm Reject?", () => {
         axios
-          .put("https://b2b2c.herokuapp.com/api/v1/user/" + this.individualUser._id + "/approve", {
-            token: this.token,
-            approve: "no"
-          })
+          .put(
+            "https://b2b2c.herokuapp.com/api/v1/user/" +
+              this.individualUser._id +
+              "/approve",
+            {
+              token: this.token,
+              approve: "no"
+            }
+          )
           .then(response => {
             app.dialog.alert("Successfully Rejected User!", async () => {
               const res = await axios.get(

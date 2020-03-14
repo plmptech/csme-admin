@@ -85,7 +85,11 @@
             :value="individualUser.industry"
             @input="individualUser.industry = $event.target.value"
           >
-            <option v-for="item in industrieslist" :key="item.id" :selected="item == individualUser.industry">{{item.name}}</option>
+            <option
+              v-for="item in industrieslist"
+              :key="item.id"
+              :selected="item == individualUser.industry"
+            >{{item.name}}</option>
           </f7-list-input>
           <f7-list-input
             type="select"
@@ -94,7 +98,11 @@
             @input="individualUser.country = $event.target.value"
             @change="changeCountry($event)"
           >
-            <option v-for="item in countrylist" :key="item.id" :selected="item == individualUser.countrylist">{{item.name}}</option>
+            <option
+              v-for="item in countrylist"
+              :key="item.id"
+              :selected="item == individualUser.countrylist"
+            >{{item.name}}</option>
             <!-- <option v-for="(value, index) in countrylist" :key="index" :selected="index == individualUser.country">{{index.name}}</option> -->
           </f7-list-input>
           <f7-list-input
@@ -102,8 +110,7 @@
             label="City"
             :value="individualUser.city"
             @input="individualUser.city = $event.target.value"
-          >
-          </f7-list-input>
+          ></f7-list-input>
           <f7-list-input
             type="number"
             label="Year(s) in Business"
@@ -111,8 +118,7 @@
             @input="individualUser.age = $event.target.value"
             required
             validate
-            :min="1"
-            :max="30"
+            :min="0"
           ></f7-list-input>
           <f7-list-input
             type="number"
@@ -121,7 +127,7 @@
             @input="individualUser.askingPrice = $event.target.value"
             required
             validate
-            :min="100"
+            :min="0"
             :max="999999999"
             :maxlength="8"
           ></f7-list-input>
@@ -227,25 +233,19 @@ export default {
     async getCountries(item) {
       let countries = "https://b2b2c.herokuapp.com/api/v1/countries";
       let industries = "https://b2b2c.herokuapp.com/api/v1/industries";
-
       const requestOne = axios.get(countries);
       const requestTwo = axios.get(industries);
-
       await axios
         .all([requestOne, requestTwo])
-        .then(axios.spread((...responses) => {
-          const responseOne = responses[0];
-          const responseTwo = responses[1];
-          console.log(responseOne);
-          console.log(responseTwo);
-
-          this.countrylist = responseOne.data.countries;
-          this.industrieslist = responseTwo.data.industries;
-          console.log("Country: " + this.countrylist);
-          console.log("Industry: " + this.industrieslist);
-           //this.citylist = this.countrylist[item.country];
-          //console.log("City List: " + this.citylist);
-         })
+        .then(
+          axios.spread((...responses) => {
+            const responseOne = responses[0];
+            const responseTwo = responses[1];
+            this.countrylist = responseOne.data.countries;
+            this.industrieslist = responseTwo.data.industries;
+            //this.citylist = this.countrylist[item.country];
+            //console.log("City List: " + this.citylist);
+          })
         )
         .catch(e => {
           this.errors.push(e);
@@ -272,50 +272,47 @@ export default {
       const size = (input.files[0].size / 1024 / 1024).toFixed(2);
       // Ensure that you have a file before attempting to read it
       if (input.files && input.files[0]) {
-        if (size < 4) {
+        if (size < 10) {
           // create a new FileReader to read this image and convert to base64 format
           var reader = new FileReader();
           reader.readAsDataURL(input.files[0]);
           // Define a callback function to run, when FileReader finishes its job
-          reader.onload = e => {
-            console.log(e.currentTarget.result);
+          reader.onload = async e => {
             this.imageData = e.currentTarget.result;
-
-            // this.imageData = this.drawImage(e.target.result);
-            // console.log(this.imageData);
+            this.imageData = await this.drawImage(e.target.result);
           };
           // Start the reader job - read file as a data url (base64 format)
         } else {
-          app.dialog.alert("Image Size exceeds 4MB ", "Error");
+          app.dialog.alert("Image Size exceeds 10MB ", "Error");
         }
       }
     },
-    // drawImage(imgUrl) {
-    //   // Recreate Canvas Element
-    //   let canvas = document.createElement("canvas");
-    //   this.canvas = canvas;
-    //   // Set Canvas Context
-    //   let ctx = this.canvas.getContext("2d");
-    //   // Create New Image
-    //   let img = new Image();
-    //   img.src = imgUrl;
-    //   console.log(img);
-    //   console.log("Image " + img.src);
-    //   // Image Size After Scaling
-    //   let scale = 50 / 100;
-    //   let width = 500 * scale;
-    //   let height = 500 * scale;
-    //   // Set Canvas Height And Width According to Image Size And Scale
-    //   this.canvas.setAttribute("width", width);
-    //   this.canvas.setAttribute("height", height);
-    //   ctx.drawImage(img, 0, 0, width, height);
-    //   // Quality Of Image
-    //   console.log(this.canvas);
-    //   // If all files have been proceed
-    //   let base64 = this.canvas.toDataURL("image/jpeg", 0.5);
-    //   return base64;
-    // },
-
+    drawImage(imgUrl) {
+      return new Promise(async function(resolve, reject) {
+        // Recreate Canvas Element
+        let img = new Image();
+        img.onload = function() {
+          let canvas = document.createElement("canvas");
+          this.canvas = canvas;
+          // Set Canvas Context
+          let ctx = this.canvas.getContext("2d");
+          // Create New Image
+          // Image Size After Scaling
+          let scale = 50 / 100;
+          let width = 500 * scale;
+          let height = 500 * scale;
+          // Set Canvas Height And Width According to Image Size And Scale
+          this.canvas.setAttribute("width", width);
+          this.canvas.setAttribute("height", height);
+          ctx.drawImage(img, 0, 0, width, height);
+          // Quality Of Image
+          // If all files have been proceed
+          let base64 = this.canvas.toDataURL("image/jpeg", 0.5);
+          resolve(base64);
+        };
+        img.src = imgUrl;
+      });
+    },
     async closePopUp() {
       this.imageData = "";
       const file = document.querySelector(".file");
@@ -329,7 +326,7 @@ export default {
     async getOneUserDetails(item) {
       this.getCountries(item);
       item.photo = this.convertImage(item.photo);
-      this.individualUser = item;   
+      this.individualUser = item;
     },
     editListing() {
       const self = this;
@@ -345,13 +342,13 @@ export default {
         this.individualUser.description.length == 0
       ) {
         app.dialog.alert("One of the required fields is empty", "Error");
-      } else if (this.individualUser.age == 0 || this.individualUser.age > 30) {
-        app.dialog.alert("Year(s) in business must be 1 - 30", "Error");
+      } else if (this.individualUser.age < 0) {
+        app.dialog.alert("Year(s) in business must more than 0", "Error");
       } else if (
-        this.individualUser.askingPrice < 100 ||
+        this.individualUser.askingPrice < 0 ||
         this.individualUser.askingPrice > 99999999
       ) {
-        app.dialog.alert("Year(s) in business must be 100 - 99999999", "Error");
+        app.dialog.alert("Year(s) in business must be 0 - 99999999", "Error");
       } else {
         const id = this.individualUser._id;
         delete this.individualUser._id;
@@ -363,7 +360,6 @@ export default {
         this.individualUser.revenue = parseFloat(this.individualUser.revenue);
         this.individualUser.cashFlow = parseFloat(this.individualUser.cashFlow);
         this.individualUser.photo = this.imageData || this.individualUser.photo;
-
         axios
           .put(
             "https://b2b2c.herokuapp.com/api/v1/listing/" + id,
@@ -387,7 +383,6 @@ export default {
         const rest = await axios.delete(
           `https://b2b2c.herokuapp.com/api/v1/listing/${id}?token=${this.token}`
         );
-
         app.dialog.alert("Successfully Delete Listing!", async () => {
           const res = await axios.get(
             "https://b2b2c.herokuapp.com/api/v1/listings/search?perPage=5&page=1"
@@ -398,10 +393,9 @@ export default {
     },
     async loadMore() {
       const self = this;
-      
+
       if (!self.allowInfinite) return;
       self.allowInfinite = false;
-
       setTimeout(async () => {
         if (this.pageNumber >= this.pageDetails) {
           self.showPreloader = false;
@@ -423,13 +417,10 @@ export default {
       "https://b2b2c.herokuapp.com/api/v1/listings/search?perPage=5&page=1"
     );
     this.listingslist = res.data.listings;
-    console.log(this.listingslist.length);
-    if (res.data.totalCount == 0 || res.data.totalCount <= 5)
-        {
-          console.log("inside this");
-          this.showPreloader = false;
-          this.allowInfinite = false;
-        }
+    if (res.data.totalCount == 0 || res.data.totalCount <= 5) {
+      this.showPreloader = false;
+      this.allowInfinite = false;
+    }
     this.pageDetails = res.data.lastPage;
   }
 };
@@ -456,5 +447,3 @@ input[type="file"] {
   cursor: pointer;
 }
 </style>
-
-

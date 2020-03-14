@@ -1,4 +1,4 @@
- <template>
+<template>
   <f7-page name="form">
     <f7-navbar :sliding="false">
       <f7-nav-left>
@@ -74,4 +74,4 @@ export default {
     this.enquirylist = res.data.s;
   }
 };
-</script>  
+</script>
