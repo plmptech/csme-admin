@@ -122,7 +122,8 @@
     "template7": "^1.4.2",
     "vue": "^2.6.11",
     "vue-base64-file-upload": "^1.0.4",
-    "vue-image-compressor": "^1.0.3"
+    "vue-image-compressor": "^1.0.3",
+    "vue-table-dynamic": "^0.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.8.7",

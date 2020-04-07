@@ -1,5 +1,6 @@
 <template>
   <f7-page
+    name="manageuser"
     infinite
     :infinite-distance="50"
     :infinite-preloader="showPreloader"
@@ -222,7 +223,7 @@ export default {
           self.userlist.push(i);
         }
         self.allowInfinite = true;
-      }, 1000);
+      }, 500);
     }
   },
   async created() {

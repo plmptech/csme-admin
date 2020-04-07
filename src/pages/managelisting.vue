@@ -299,8 +299,8 @@ export default {
           // Create New Image
           // Image Size After Scaling
           let scale = 50 / 100;
-          let width = 500 * scale;
-          let height = 500 * scale;
+          let width = 400 * scale;
+          let height = 400 * scale;
           // Set Canvas Height And Width According to Image Size And Scale
           this.canvas.setAttribute("width", width);
           this.canvas.setAttribute("height", height);
@@ -409,7 +409,7 @@ export default {
           self.listingslist.push(i);
         }
         self.allowInfinite = true;
-      }, 1000);
+      }, 500);
     }
   },
   async created() {

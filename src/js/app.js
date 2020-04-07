@@ -22,7 +22,7 @@ import App from '../components/app.vue';
 // window.proto = 'http'
 // let port = 3000
 // window.apiUrl = `${proto}//:localhost:${port}/api/v1/`
-// window.token = localStorage.token || ''
+window.token = localStorage.token || ''
 
 // Init Framework7-Vue Plugin
 Framework7.use(Framework7Vue);

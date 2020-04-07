@@ -65,8 +65,8 @@ export default {
     },
     markAsDone(item) {
       this.individualUser = item;
-      console.log(this.individualUser.status);
-      console.log(this.individualUser.type);
+      //console.log(this.individualUser.status);
+      //console.log(this.individualUser.type);
       const self = this;
       const app = self.$f7;
       const router = self.$f7router;

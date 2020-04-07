@@ -23,8 +23,15 @@
         </f7-page>
       </f7-view>
     </f7-panel>
+    <f7-views tabs class="safe-areas" :push-state="true" push-state-separator="/myapp">
+		<f7-view v-for="v in views"
+			:id="'view-' + v" 
+			:name='v'  
+			:key="v"
+      :url="v"
+		/>
+	</f7-views>
     <!-- Your main view, should have "view-main" class -->
-    <f7-view main class="safe-areas" url="/main/"></f7-view>
   </f7-app>
 </template>
 <script>
@@ -35,6 +42,10 @@ import babelPolyfill from "babel-polyfill";
 export default {
   data() {
     return {
+      views: [
+					'adduser', 'manageuser', 'managelisting', 'pendingpremium', 'userenquiry', 
+					'managecountry', 'manageindustry'
+				],
       // Framework7 Parameters
       f7params: {
         name: "csme-dashboard", // App name

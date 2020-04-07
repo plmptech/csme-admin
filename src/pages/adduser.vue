@@ -1,4 +1,5 @@
 <template>
+<f7-view main :push-state="true">
   <f7-page>
     <f7-navbar :sliding="false">
       <f7-nav-left>
@@ -99,6 +100,7 @@
       </div>
     </f7-list>
   </f7-page>
+</f7-view>
 </template>
 <script>
 export default {

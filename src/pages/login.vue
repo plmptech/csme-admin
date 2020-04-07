@@ -73,11 +73,11 @@ export default {
       }
     }
   },
-  mounted() {
-    const self = this;
-    const app = self.$f7;
-    const router = self.$f7router;
-    if (sessionStorage.getItem("loginpage")) router.navigate("/managelisting/");
-  }
+  // mounted() {
+  //   const self = this;
+  //   const app = self.$f7;
+  //   const router = self.$f7router;
+  //   if (sessionStorage.getItem("loginpage")) router.navigate("/managelisting/");
+  // }
 };
 </script>
