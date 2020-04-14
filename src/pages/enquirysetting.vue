@@ -1,4 +1,5 @@
 <template>
+<f7-view :routes="router">
   <f7-page name="form">
     <f7-navbar :sliding="false">
       <f7-nav-left>
@@ -30,25 +31,36 @@
     </f7-list>
     <f7-button @click="updateMessage()">Update</f7-button>
   </f7-page>
+</f7-view>
 </template>
 <script>
+import WelcomePage from '@/pages/login.vue'
 export default {
   data() {
     return {
+      router: [
+        {
+          path: '/',
+          component: WelcomePage
+        }
+      ],
       enquirylist: [],
       errors: [],
       token: sessionStorage.getItem("loginpage")
     };
+  },
+  activated() {
+    console.log('enquiry setting activated')
   },
   methods: {
     logout() {
       const self = this;
       const app = self.$f7;
       const router = self.$f7router;
-      app.dialog.confirm("Confirm Logout?", function() {
+      app.dialog.confirm("Confirm Logout?", () => {
         app.dialog.alert("Successfully Logged Out!");
         sessionStorage.removeItem("loginpage");
-        router.navigate("/main/");
+        this.$router.push("/");
       });
     },
     updateMessage() {

@@ -45,6 +45,7 @@ module.exports = {
     compress: true,
     contentBase: '/www/',
     disableHostCheck: true,
+    historyApiFallback: true,
     watchOptions: {
       poll: 1000,
     },

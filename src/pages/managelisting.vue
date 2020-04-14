@@ -1,191 +1,208 @@
 <template>
-  <f7-page
-    infinite
-    :infinite-distance="50"
-    :infinite-preloader="showPreloader"
-    @infinite="loadMore"
-  >
-    <f7-navbar :sliding="false">
-      <f7-nav-left>
-        <f7-link icon-ios="f7:menu" icon-aurora="f7:menu" icon-md="material:menu" panel-open="left"></f7-link>
-      </f7-nav-left>
-      <f7-nav-title>Manage Listing</f7-nav-title>
-      <f7-nav-right>
-        <a href @click="logout" class="link">
-          <span>Logout</span>
-          <i class="icon material-icons md-only">last_page</i>
-        </a>
-      </f7-nav-right>
-    </f7-navbar>
-    <f7-searchbar
-      search-container=".search-list"
-      search-in=".item-title"
-      :disable-button="!$theme.aurora"
-    ></f7-searchbar>
+  <f7-view :routes="router">
+    <f7-page
+      infinite
+      :infinite-distance="50"
+      :infinite-preloader="showPreloader"
+      @infinite="loadMore"
+    >
+      <f7-navbar :sliding="false">
+        <f7-nav-left>
+          <f7-link
+            icon-ios="f7:menu"
+            icon-aurora="f7:menu"
+            icon-md="material:menu"
+            panel-open="left"
+          ></f7-link>
+        </f7-nav-left>
+        <f7-nav-title>Manage Listing</f7-nav-title>
+        <f7-nav-right>
+          <a href @click="logout" class="link">
+            <span>Logout</span>
+            <i class="icon material-icons md-only">last_page</i>
+          </a>
+        </f7-nav-right>
+      </f7-navbar>
+      <f7-searchbar
+        search-container=".search-list"
+        search-in=".item-title"
+        :disable-button="!$theme.aurora"
+      ></f7-searchbar>
 
-    <f7-list class="searchbar-not-found">
-      <f7-list-item title="Nothing found"></f7-list-item>
-    </f7-list>
-    <f7-list class="search-list searchbar-found">
-      <f7-list class="table-header">
-        <f7-list-item>
-          <f7-list-item-cell v-for="(value, index) in headers" :key="index">{{ value }}</f7-list-item-cell>
-        </f7-list-item>
+      <f7-list class="searchbar-not-found">
+        <f7-list-item title="Nothing found"></f7-list-item>
       </f7-list>
-      <f7-list class="table-body">
-        <ul>
-          <f7-list-item v-for="item in listingslist" :key="item.id">
-            <f7-list-item-cell class="item-title">{{item.name}}</f7-list-item-cell>
-            <f7-list-item-cell class="item-title">{{item.purpose}}</f7-list-item-cell>
-            <f7-list-item-cell class="item-title">{{item.industry}}</f7-list-item-cell>
-            <f7-list-item-cell class="item-title">{{item.country}}</f7-list-item-cell>
-            <f7-list-item-cell class="item-title">{{item.city}}</f7-list-item-cell>
-            <f7-list-item-cell class="item-title">{{item.age}}</f7-list-item-cell>
-            <f7-list-item-cell class="item-title">{{item.askingPrice}}</f7-list-item-cell>
-            <f7-list-item-cell class="item-title">{{item.revenue}}</f7-list-item-cell>
-            <f7-list-item-cell class="item-title">{{item.cashFlow}}</f7-list-item-cell>
-            <f7-list-item-cell class="item-title">{{item.description}}</f7-list-item-cell>
-            <f7-list-item-cell>
-              <f7-button @click="getOneUserDetails(item)" popup-open=".listing-edit-popup-push">Edit</f7-button>
-              <f7-button @click="deleteListing(item)">Delete</f7-button>
-            </f7-list-item-cell>
+      <f7-list class="search-list searchbar-found">
+        <f7-list class="table-header">
+          <f7-list-item>
+            <f7-list-item-cell v-for="(value, index) in headers" :key="index">{{ value }}</f7-list-item-cell>
           </f7-list-item>
-        </ul>
-      </f7-list>
-    </f7-list>
-
-    <!-- Edit Popup -->
-    <f7-popup class="listing-edit-popup-push" push>
-      <f7-page>
-        <f7-block strong>
-          <div>Edit Listing</div>
-        </f7-block>
-        <f7-list form id="listingform">
-          <!-- Add Validation -->
-          <f7-list-input
-            type="text"
-            label="Name"
-            :value="individualUser.name"
-            @input="individualUser.name = $event.target.value"
-            required
-            validate
-            :maxlength="50"
-          ></f7-list-input>
-          <f7-list-input
-            type="text"
-            label="Type"
-            :value="individualUser.purpose"
-            @input="individualUser.purpose = $event.target.value"
-            required
-            validate
-          ></f7-list-input>
-          <f7-list-input
-            type="select"
-            label="Industry"
-            :value="individualUser.industry"
-            @input="individualUser.industry = $event.target.value"
-          >
-            <option
-              v-for="item in industrieslist"
-              :key="item.id"
-              :selected="item == individualUser.industry"
-            >{{item.name}}</option>
-          </f7-list-input>
-          <f7-list-input
-            type="select"
-            label="Country"
-            :value="individualUser.country"
-            @input="individualUser.country = $event.target.value"
-            @change="changeCountry($event)"
-          >
-            <option
-              v-for="item in countrylist"
-              :key="item.id"
-              :selected="item == individualUser.countrylist"
-            >{{item.name}}</option>
-            <!-- <option v-for="(value, index) in countrylist" :key="index" :selected="index == individualUser.country">{{index.name}}</option> -->
-          </f7-list-input>
-          <f7-list-input
-            type="text"
-            label="City"
-            :value="individualUser.city"
-            @input="individualUser.city = $event.target.value"
-          ></f7-list-input>
-          <f7-list-input
-            type="number"
-            label="Year(s) in Business"
-            :value="individualUser.age"
-            @input="individualUser.age = $event.target.value"
-            required
-            validate
-            :min="0"
-          ></f7-list-input>
-          <f7-list-input
-            type="number"
-            label="Asking Price"
-            :value="individualUser.askingPrice"
-            @input="individualUser.askingPrice = $event.target.value"
-            required
-            validate
-            :min="0"
-            :max="999999999"
-            :maxlength="8"
-          ></f7-list-input>
-          <f7-list-input
-            type="number"
-            label="Revenue"
-            :value="individualUser.revenue"
-            @input="individualUser.revenue = $event.target.value"
-            required
-            validate
-          ></f7-list-input>
-          <f7-list-input
-            type="number"
-            label="Cash Flow"
-            :value="individualUser.cashFlow"
-            @input="individualUser.cashFlow = $event.target.value"
-            required
-            validate
-          ></f7-list-input>
-          <f7-list-input
-            type="text"
-            label="Description"
-            :value="individualUser.description"
-            @input="individualUser.description = $event.target.value"
-            required
-            validate
-            :maxlength="500"
-          ></f7-list-input>
-          <div class="image-preview">
-            <img class="preview" v-if="!imageData.length" v-bind:src="individualUser.photo" />
-          </div>
-          <div class="image-preview" v-if="imageData.length > 0">
-            <img class="preview" :src="imageData" />
-          </div>
-          <div class="file-upload-form">
-            <label for="file-upload" class="custom-file-upload">
-              <i class="fa fa-cloud-upload"></i> Upload Image
-            </label>
-            <input
-              id="file-upload"
-              type="file"
-              class="file"
-              @change="previewImage"
-              accept="image/*"
-            />
-          </div>
-          <f7-button @click="editListing()">Submit</f7-button>
-          <f7-button class="link popup-close" @click="closePopUp()" href="#">Cancel</f7-button>
         </f7-list>
-      </f7-page>
-    </f7-popup>
-  </f7-page>
+        <f7-list class="table-body">
+          <ul>
+            <f7-list-item v-for="item in listingslist" :key="item.id">
+              <f7-list-item-cell class="item-title">{{item.name}}</f7-list-item-cell>
+              <f7-list-item-cell class="item-title">{{item.purpose}}</f7-list-item-cell>
+              <f7-list-item-cell class="item-title">{{item.industry}}</f7-list-item-cell>
+              <f7-list-item-cell class="item-title">{{item.country}}</f7-list-item-cell>
+              <f7-list-item-cell class="item-title">{{item.city}}</f7-list-item-cell>
+              <f7-list-item-cell class="item-title">{{item.age}}</f7-list-item-cell>
+              <f7-list-item-cell class="item-title">{{item.askingPrice}}</f7-list-item-cell>
+              <f7-list-item-cell class="item-title">{{item.revenue}}</f7-list-item-cell>
+              <f7-list-item-cell class="item-title">{{item.cashFlow}}</f7-list-item-cell>
+              <f7-list-item-cell class="item-title">{{item.description}}</f7-list-item-cell>
+              <f7-list-item-cell>
+                <f7-button
+                  @click="getOneUserDetails(item)"
+                  popup-open=".listing-edit-popup-push"
+                >Edit</f7-button>
+                <f7-button @click="deleteListing(item)">Delete</f7-button>
+              </f7-list-item-cell>
+            </f7-list-item>
+          </ul>
+        </f7-list>
+      </f7-list>
+
+      <!-- Edit Popup -->
+      <f7-popup class="listing-edit-popup-push" push>
+        <f7-page>
+          <f7-block strong>
+            <div>Edit Listing</div>
+          </f7-block>
+          <f7-list form id="listingform">
+            <!-- Add Validation -->
+            <f7-list-input
+              type="text"
+              label="Name"
+              :value="individualUser.name"
+              @input="individualUser.name = $event.target.value"
+              required
+              validate
+              :maxlength="50"
+            ></f7-list-input>
+            <f7-list-input
+              type="text"
+              label="Type"
+              :value="individualUser.purpose"
+              @input="individualUser.purpose = $event.target.value"
+              required
+              validate
+            ></f7-list-input>
+            <f7-list-input
+              type="select"
+              label="Industry"
+              :value="individualUser.industry"
+              @input="individualUser.industry = $event.target.value"
+            >
+              <option
+                v-for="item in industrieslist"
+                :key="item.id"
+                :selected="item == individualUser.industry"
+              >{{item.name}}</option>
+            </f7-list-input>
+            <f7-list-input
+              type="select"
+              label="Country"
+              :value="individualUser.country"
+              @input="individualUser.country = $event.target.value"
+              @change="changeCountry($event)"
+            >
+              <option
+                v-for="item in countrylist"
+                :key="item.id"
+                :selected="item == individualUser.countrylist"
+              >{{item.name}}</option>
+              <!-- <option v-for="(value, index) in countrylist" :key="index" :selected="index == individualUser.country">{{index.name}}</option> -->
+            </f7-list-input>
+            <f7-list-input
+              type="text"
+              label="City"
+              :value="individualUser.city"
+              @input="individualUser.city = $event.target.value"
+            ></f7-list-input>
+            <f7-list-input
+              type="number"
+              label="Year(s) in Business"
+              :value="individualUser.age"
+              @input="individualUser.age = $event.target.value"
+              required
+              validate
+              :min="0"
+            ></f7-list-input>
+            <f7-list-input
+              type="number"
+              label="Asking Price"
+              :value="individualUser.askingPrice"
+              @input="individualUser.askingPrice = $event.target.value"
+              required
+              validate
+              :min="0"
+              :max="999999999"
+              :maxlength="8"
+            ></f7-list-input>
+            <f7-list-input
+              type="number"
+              label="Revenue"
+              :value="individualUser.revenue"
+              @input="individualUser.revenue = $event.target.value"
+              required
+              validate
+            ></f7-list-input>
+            <f7-list-input
+              type="number"
+              label="Cash Flow"
+              :value="individualUser.cashFlow"
+              @input="individualUser.cashFlow = $event.target.value"
+              required
+              validate
+            ></f7-list-input>
+            <f7-list-input
+              type="text"
+              label="Description"
+              :value="individualUser.description"
+              @input="individualUser.description = $event.target.value"
+              required
+              validate
+              :maxlength="500"
+            ></f7-list-input>
+            <div class="image-preview">
+              <img class="preview" v-if="!imageData.length" v-bind:src="individualUser.photo" />
+            </div>
+            <div class="image-preview" v-if="imageData.length > 0">
+              <img class="preview" :src="imageData" />
+            </div>
+            <div class="file-upload-form">
+              <label for="file-upload" class="custom-file-upload">
+                <i class="fa fa-cloud-upload"></i> Upload Image
+              </label>
+              <input
+                id="file-upload"
+                type="file"
+                class="file"
+                @change="previewImage"
+                accept="image/*"
+              />
+            </div>
+            <f7-button @click="editListing()">Submit</f7-button>
+            <f7-button class="link popup-close" @click="closePopUp()" href="#">Cancel</f7-button>
+          </f7-list>
+        </f7-page>
+      </f7-popup>
+    </f7-page>
+  </f7-view>
 </template>
 <script>
+import WelcomePage from '@/pages/login.vue'
 import base64toblob from "base64toblob";
 export default {
   data() {
     return {
+      router: [
+        {
+          path: "/",
+          component: WelcomePage
+        }
+      ],
       allowInfinite: true,
       showPreloader: true,
       imageData: "",
@@ -224,10 +241,10 @@ export default {
       const self = this;
       const app = self.$f7;
       const router = self.$f7router;
-      app.dialog.confirm("Confirm Logout?", function() {
+      app.dialog.confirm("Confirm Logout?", () => {
         app.dialog.alert("Successfully Logged Out!");
         sessionStorage.removeItem("loginpage");
-        router.navigate("/main/");
+        this.$router.push("/");
       });
     },
     async getCountries(item) {

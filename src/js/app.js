@@ -17,20 +17,34 @@ import '../css/app.less';
 
 // Import App Component
 import App from '../components/app.vue';
-
-// window.$$ = Dom7
-// window.proto = 'http'
-// let port = 3000
-// window.apiUrl = `${proto}//:localhost:${port}/api/v1/`
-window.token = localStorage.token || ''
+import router from './router'
 
 // Init Framework7-Vue Plugin
 Framework7.use(Framework7Vue);
 
 window.evm = new Vue()
 
+// To add router
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.isNeedLogin)) {
+    var userKey = sessionStorage.getItem('loginpage')
+    var isNotLogin = userKey == null || userKey.trim().length == 0
+    if (isNotLogin) {
+      sessionStorage.removeItem('loginpage')
+      next({
+        path: '/'
+      })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+})
+
 // Init App
 new Vue({
+  router,
   el: '#app',
   render: (h) => h(App),
 

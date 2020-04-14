@@ -1,5 +1,5 @@
 <template>
-<f7-view main :push-state="true">
+<f7-view :routes="router">
   <f7-page>
     <f7-navbar :sliding="false">
       <f7-nav-left>
@@ -103,9 +103,16 @@
 </f7-view>
 </template>
 <script>
+import WelcomePage from '@/pages/login.vue'
 export default {
   data() {
     return {
+       router: [
+        {
+          path: '/',
+          component: WelcomePage
+        }
+      ],
       username: "",
       password: "",
       confirm: "",
@@ -114,15 +121,17 @@ export default {
       token: sessionStorage.getItem("loginpage")
     };
   },
+  activated() {
+    console.log('add user activated')
+  },
   methods: {
     logout() {
       const self = this;
       const app = self.$f7;
-      const router = self.$f7router;
-      app.dialog.confirm("Confirm Logout?", function() {
+      app.dialog.confirm("Confirm Logout?", () => {
         app.dialog.alert("Successfully Logged Out!");
         sessionStorage.removeItem("loginpage");
-        router.navigate("/main/");
+        this.$router.replace("/");
       });
     },
     async addUser() {
@@ -153,7 +162,7 @@ export default {
           );
           if (response.data.status == "ok") {
             app.dialog.alert("Successfully Created User", "Success!");
-            router.navigate("/manageuser/");
+            this.$router.push("manageuser");
           }
           if (response.data.status == "error") {
             app.dialog.alert(response.data.message);

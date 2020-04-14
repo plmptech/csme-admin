@@ -61,7 +61,7 @@ export default {
         );
         if (response.data.status == "ok") {
           sessionStorage.setItem("loginpage", response.data.token);
-          router.navigate("/managelisting/");
+          this.$router.replace('managelisting');
         }
         if (response.data.status == "error") {
           app.dialog.alert(response.data.message);
@@ -70,9 +70,13 @@ export default {
         }
       } catch (err) {
         console.error(err.message);
+        this.$router.replace('/')
       }
     }
   },
+  activated() {
+    console.log('login activated')
+  }
   // mounted() {
   //   const self = this;
   //   const app = self.$f7;
