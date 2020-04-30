@@ -129,7 +129,7 @@ export default {
     async closePopUp() {
       this.userlist = [];
       const res = await axios.get(
-        "https://b2b2c.herokuapp.com/api/v1/users/search?perPage=5&page=1"
+        "https://b2b2c.herokuapp.com/api/v1/users/search?perPage=10&page=1"
       );
       this.userlist = res.data.users;
     },
@@ -163,7 +163,7 @@ export default {
           app.dialog.alert("Successfully Updated The User!");
           app.popup.close();
           axios.get(
-            "https://b2b2c.herokuapp.com/api/v1/users/search?perPage=5&page=1"
+            "https://b2b2c.herokuapp.com/api/v1/users/search?perPage=10&page=1"
           );
           this.userlist = res.data.users;
         })
@@ -190,7 +190,7 @@ export default {
           .then(response => {
             app.dialog.alert("Successfully Delete User!", async () => {
               const res = await axios.get(
-                "https://b2b2c.herokuapp.com/api/v1/users/search?perPage=5&page=1"
+                "https://b2b2c.herokuapp.com/api/v1/users/search?perPage=10&page=1"
               );
               this.userlist = res.data.users;
             });
@@ -210,7 +210,7 @@ export default {
           .then(response => {
             app.dialog.alert("Successfully Reset Password!", async () => {
               const res = await axios.get(
-                "https://b2b2c.herokuapp.com/api/v1/users/search?perPage=5&page=1"
+                "https://b2b2c.herokuapp.com/api/v1/users/search?perPage=10&page=1"
               );
               this.userlist = res.data.users;
             });
@@ -230,7 +230,7 @@ export default {
         }
         this.pageNumber++;
         const res = await axios.get(
-          `https://b2b2c.herokuapp.com/api/v1/users/search?perPage=5&page=${this.pageNumber}`
+          `https://b2b2c.herokuapp.com/api/v1/users/search?perPage=10&page=${this.pageNumber}`
         );
 
         for (let i of res.data.users) {
@@ -242,10 +242,10 @@ export default {
   },
   async created() {
     const res = await axios.get(
-      "https://b2b2c.herokuapp.com/api/v1/users/search?perPage=5&page=1"
+      "https://b2b2c.herokuapp.com/api/v1/users/search?perPage=10&page=1"
     );
     this.userlist = res.data.users;
-    if (res.data.totalCount == 0 || res.data.totalCount <= 5) {
+    if (res.data.totalCount == 0 || res.data.totalCount <= 10) {
       this.showPreloader = false;
       this.allowInfinite = false;
     }

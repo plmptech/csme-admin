@@ -336,7 +336,7 @@ export default {
       file.value = "";
       this.listingslist = [];
       const res = await axios.get(
-        "https://b2b2c.herokuapp.com/api/v1/listings/search?perPage=5&page=1"
+        "https://b2b2c.herokuapp.com/api/v1/listings/search?perPage=10&page=1"
       );
       this.listingslist = res.data.listings;
     },
@@ -402,7 +402,7 @@ export default {
         );
         app.dialog.alert("Successfully Delete Listing!", async () => {
           const res = await axios.get(
-            "https://b2b2c.herokuapp.com/api/v1/listings/search?perPage=5&page=1"
+            "https://b2b2c.herokuapp.com/api/v1/listings/search?perPage=10&page=1"
           );
           this.listingslist = res.data.listings;
         });
@@ -420,7 +420,7 @@ export default {
         }
         this.pageNumber++;
         const res = await axios.get(
-          `https://b2b2c.herokuapp.com/api/v1/listings/search?perPage=5&page=${this.pageNumber}`
+          `https://b2b2c.herokuapp.com/api/v1/listings/search?perPage=10&page=${this.pageNumber}`
         );
         for (let i of res.data.listings) {
           self.listingslist.push(i);
@@ -431,10 +431,10 @@ export default {
   },
   async created() {
     const res = await axios.get(
-      "https://b2b2c.herokuapp.com/api/v1/listings/search?perPage=5&page=1"
+      "https://b2b2c.herokuapp.com/api/v1/listings/search?perPage=10&page=1"
     );
     this.listingslist = res.data.listings;
-    if (res.data.totalCount == 0 || res.data.totalCount <= 5) {
+    if (res.data.totalCount == 0 || res.data.totalCount <= 10) {
       this.showPreloader = false;
       this.allowInfinite = false;
     }
